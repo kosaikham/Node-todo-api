@@ -68,7 +68,7 @@ app.delete('/todos/:id', (req, res) => {
 
 app.patch('/todos/:id', (req, res) => {
 	var id = req.params.id;
-	var body = _.pick(req.body, ['text', 'completed']);
+	var body = _.pick(req.body, ['text', 'completed']); // it return new obj included text and completed properties
 
 	if(!ObjectID.isValid(id)){
 		return res.status(404).send();
@@ -76,7 +76,6 @@ app.patch('/todos/:id', (req, res) => {
 
 	if(_.isBoolean(body.completed) && body.completed){
 		body.completedAt = new Date().getTime();
-		body.completed = true;
 	}else{
 		body.completed = false;
 		body.completedAt = null;
@@ -86,7 +85,6 @@ app.patch('/todos/:id', (req, res) => {
 		if(!todo){
 			return res.status(404).send();
 		}
-
 		res.send({todo});
 	}).catch((e) => res.status(400).send());
 });
