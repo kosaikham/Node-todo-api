@@ -83,7 +83,7 @@ UserSchema.methods.generateAuthToken = function() {
 
 	// myArray = myArray.concat([myObject]); //this uses $set so no problems
 	// user.tokens.push({access, token});
-	user.tokens.concat([{access, token}]);
+	user.tokens = user.tokens.concat([{access, token}]);
 	return user.save().then(() => {
 		return token;
 	});

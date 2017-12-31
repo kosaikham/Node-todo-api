@@ -5,4 +5,5 @@
 // console.log(obj['one-one']);
 
 var one = ['abc'];
-console.log(one.concat(['xyz']));
+one.concat(['xyz']);
+console.log(one);
