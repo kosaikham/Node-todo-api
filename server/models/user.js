@@ -31,7 +31,9 @@ var UserSchema = new mongoose.Schema({
 			required: true
 		}
 	}]
-}, { usePushEach: true });
+}, {
+    	usePushEach: true 
+   });
 
 UserSchema.statics.findByToken = function(token){
 	var User = this;
@@ -48,6 +50,26 @@ UserSchema.statics.findByToken = function(token){
 	});
 };
 
+UserSchema.statics.findByCredentials = function(email, password) {
+	var User = this;
+
+	return User.findOne({email}).then((user) => {
+		if(!user){
+			return Promise.reject();
+		}
+
+		return new Promise((resolve, reject) => {
+			bcrypt.compare(password, user.password, (err, result) => {
+				if(result){
+					resolve(user);
+				}else{
+					reject();
+				}
+			});
+		});
+	});
+};
+
 UserSchema.methods.toJSON = function() {
 	var user = this;
 	var userObject = user.toObject();
@@ -59,7 +81,9 @@ UserSchema.methods.generateAuthToken = function() {
 	var access = 'auth';
 	var token = jwt.sign({_id: user._id.toHexString(), access}, 'abc123').toString();
 
-	user.tokens.push({access, token});
+	// myArray = myArray.concat([myObject]); //this uses $set so no problems
+	// user.tokens.push({access, token});
+	user.tokens.concat([{access, token}]);
 	return user.save().then(() => {
 		return token;
 	});
