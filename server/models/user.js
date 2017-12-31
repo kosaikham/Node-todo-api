@@ -83,9 +83,19 @@ UserSchema.methods.generateAuthToken = function() {
 
 	// myArray = myArray.concat([myObject]); //this uses $set so no problems
 	// user.tokens.push({access, token});
-	user.tokens = user.tokens.concat([{access, token}]);
+	//user.tokens = user.tokens.concat([{access, token}]);
+	user.tokens[0] = {access, token};
 	return user.save().then(() => {
 		return token;
+	});
+};
+
+UserSchema.methods.removeToken = function(token){
+	var user = this;
+	return user.update({
+		$pull: {
+			tokens: {token}
+		}
 	});
 };
 
